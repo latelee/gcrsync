@@ -37,7 +37,7 @@ import (
 	"github.com/Sirupsen/logrus"
 	"github.com/docker/docker/client"
 
-	"github.com/mritd/gcrsync/pkg/utils"
+	"github.com/latelee/gcrsync/pkg/utils"
 )
 
 const (
@@ -177,7 +177,7 @@ func (g *Gcr) Init() {
 	logrus.Infoln("Init update channel.")
 	g.update = make(chan string, 20)
 
-	logrus.Infoln("Init commit repo: %s", g.GithubRepo)
+	logrus.Infof("Init commit repo: %s\n", g.GithubRepo)
 	if g.GithubToken == "" {
 		utils.ErrorExit("Github Token is blank!", 1)
 	}
