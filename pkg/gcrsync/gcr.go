@@ -33,7 +33,7 @@ import (
 
 	"github.com/Sirupsen/logrus"
 	"github.com/json-iterator/go"
-	"github.com/mritd/gcrsync/pkg/utils"
+	"github.com/latelee/gcrsync/pkg/utils"
 )
 
 type Image struct {
@@ -68,7 +68,7 @@ func (g *Gcr) gcrImageList() []string {
 	var images []string
 	publicImageNames := g.gcrPublicImageNames()
 
-	logrus.Infoln("Number of gcr images: %d", len(publicImageNames))
+	logrus.Infoln("111 Number of gcr images: %d", len(publicImageNames))
 
 	imgNameCh := make(chan string, 20)
 	imgGetWg := new(sync.WaitGroup)

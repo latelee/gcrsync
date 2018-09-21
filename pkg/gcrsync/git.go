@@ -33,7 +33,7 @@ import (
 
 	"github.com/json-iterator/go"
 
-	"github.com/mritd/gcrsync/pkg/utils"
+	"github.com/latelee/gcrsync/pkg/utils"
 )
 
 func (g *Gcr) Commit(images []string) {
