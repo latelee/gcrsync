@@ -68,7 +68,7 @@ func (g *Gcr) gcrImageList() []string {
 	var images []string
 	publicImageNames := g.gcrPublicImageNames()
 
-	logrus.Debugf("Number of gcr images: %d", len(publicImageNames))
+	logrus.Infoln("Number of gcr images: %d", len(publicImageNames))
 
 	imgNameCh := make(chan string, 20)
 	imgGetWg := new(sync.WaitGroup)

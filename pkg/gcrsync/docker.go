@@ -33,7 +33,7 @@ import (
 
 	"github.com/Sirupsen/logrus"
 
-	"github.com/mritd/gcrsync/pkg/utils"
+	"github.com/latelee/gcrsync/pkg/utils"
 
 	"github.com/docker/docker/api/types"
 )
@@ -56,7 +56,7 @@ func (g *Gcr) Process(imageName string) {
 		}
 		io.Copy(ioutil.Discard, r)
 		r.Close()
-		logrus.Infof("Pull image: %s success.", oldImageName)
+		logrus.Infof("11 Pull image: %s success.", oldImageName)
 
 		// tag it
 		err = g.dockerClient.ImageTag(ctx, oldImageName, newImageName)

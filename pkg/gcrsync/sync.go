@@ -150,7 +150,7 @@ func (g *Gcr) Init() {
 		logrus.SetLevel(logrus.DebugLevel)
 	}
 
-	logrus.Infoln("Init http client.")
+	logrus.Infoln("111 Init http client.")
 	g.httpClient = &http.Client{
 		Timeout: g.HttpTimeOut,
 	}
@@ -177,7 +177,7 @@ func (g *Gcr) Init() {
 	logrus.Infoln("Init update channel.")
 	g.update = make(chan string, 20)
 
-	logrus.Infoln("Init commit repo.")
+	logrus.Infoln("Init commit repo: %s", g.GithubRepo)
 	if g.GithubToken == "" {
 		utils.ErrorExit("Github Token is blank!", 1)
 	}

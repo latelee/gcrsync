@@ -27,7 +27,7 @@ import (
 	"os"
 	"time"
 
-	"github.com/mritd/gcrsync/pkg/gcrsync"
+	"github.com/latelee/gcrsync/pkg/gcrsync"
 
 	"github.com/spf13/cobra"
 )
@@ -80,6 +80,6 @@ func init() {
 	rootCmd.PersistentFlags().IntVar(&queryLimit, "querylimit", 50, "http query limit")
 	rootCmd.PersistentFlags().DurationVar(&httpTimeout, "httptimeout", 10*time.Second, "http request timeout")
 	rootCmd.PersistentFlags().IntVar(&processLimit, "processlimit", 10, "image process limit")
-	rootCmd.PersistentFlags().StringVar(&githubRepo, "githubrepo", "mritd/gcr", "github commit repo")
+	rootCmd.PersistentFlags().StringVar(&githubRepo, "githubrepo", "latelee/gcr", "github commit repo")
 	rootCmd.PersistentFlags().StringVar(&githubToken, "githubtoken", "", "github commit token")
 }

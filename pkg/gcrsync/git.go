@@ -79,8 +79,8 @@ func (g *Gcr) Commit(images []string) {
 	newUpdateFile.Write(buf)
 
 	utils.GitCmd(repoDir, "config", "--global", "push.default", "simple")
-	utils.GitCmd(repoDir, "config", "--global", "user.email", "gcrsync@mritd.me")
-	utils.GitCmd(repoDir, "config", "--global", "user.name", "gcrsync")
+	utils.GitCmd(repoDir, "config", "--global", "user.email", "li@latelee.org")
+	utils.GitCmd(repoDir, "config", "--global", "user.name", "Late Lee")
 	utils.GitCmd(repoDir, "add", ".")
 	utils.GitCmd(repoDir, "commit", "-m", g.CommitMsg)
 	utils.GitCmd(repoDir, "push", "--force", g.commitURL, "master")
