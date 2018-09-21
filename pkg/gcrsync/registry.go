@@ -105,6 +105,7 @@ func (g *Gcr) queryRegistryImage(imageName string) bool {
 func (g *Gcr) compareCache(images []string) []string {
 	var cachedImages []string
 	repoDir := strings.Split(g.GithubRepo, "/")[1]
+    logrus.Infof("registry debug %s %s", repoDir, g.NameSpace)
 	f, err := os.Open(filepath.Join(repoDir, g.NameSpace))
 	utils.CheckAndExit(err)
 	defer f.Close()

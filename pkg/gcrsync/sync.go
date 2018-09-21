@@ -177,7 +177,7 @@ func (g *Gcr) Init() {
 	logrus.Infoln("Init update channel.")
 	g.update = make(chan string, 20)
 
-	logrus.Infof("Init commit repo: %s\n", g.GithubRepo)
+	logrus.Infof("Init commit repo: %s", g.GithubRepo)
 	if g.GithubToken == "" {
 		utils.ErrorExit("Github Token is blank!", 1)
 	}

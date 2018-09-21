@@ -74,6 +74,7 @@ func (g *Gcr) gcrImageList() []string {
 	imgGetWg := new(sync.WaitGroup)
 	imgGetWg.Add(len(publicImageNames))
 
+    logrus.Infof("debug 77")
 	for _, imageName := range publicImageNames {
 
 		tmpImageName := imageName
@@ -86,6 +87,7 @@ func (g *Gcr) gcrImageList() []string {
 
 			select {
 			case <-g.QueryLimit:
+                logrus.Infof("debug 90")
 				req, err := http.NewRequest("GET", fmt.Sprintf(GcrImageTags, g.NameSpace, tmpImageName), nil)
 				utils.CheckAndExit(err)
 
@@ -96,6 +98,7 @@ func (g *Gcr) gcrImageList() []string {
 				utils.CheckAndExit(err)
 				resp.Body.Close()
 
+                logrus.Infof("debug 100")
 				var tags []string
 				jsoniter.UnmarshalFromString(jsoniter.Get(b, "tags").ToString(), &tags)
 
