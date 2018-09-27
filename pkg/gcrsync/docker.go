@@ -92,7 +92,7 @@ func (g *Gcr) Process(imageName string) {
 		logrus.Debugf("Remove image: %s success.", oldImageName)
 
 	}
-	logrus.Debugln("Append CHANGELOG")
+	logrus.Infoln("Append CHANGELOG")
 	g.update <- imageName
 	logrus.Debugln("Done.")
 

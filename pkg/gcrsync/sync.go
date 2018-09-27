@@ -23,168 +23,175 @@
 package gcrsync
 
 import (
-	"net/http"
-	"net/url"
-	"os"
-	"path/filepath"
-	"sort"
-	"strings"
-	"sync"
-	"time"
+    "net/http"
+    "net/url"
+    "os"
+    "path/filepath"
+    "sort"
+    "strings"
+    "sync"
+    "time"
 
-	"github.com/json-iterator/go"
+    "github.com/json-iterator/go"
 
-	"github.com/Sirupsen/logrus"
-	"github.com/docker/docker/client"
+    "github.com/Sirupsen/logrus"
+    "github.com/docker/docker/client"
 
-	"github.com/latelee/gcrsync/pkg/utils"
+    "github.com/latelee/gcrsync/pkg/utils"
 )
 
 const (
-	ChangeLog      = "CHANGELOG.md"
-	GcrRegistryTpl = "gcr.io/%s/%s"
-	GcrImages      = "https://gcr.io/v2/%s/tags/list"
-	GcrImageTags   = "https://gcr.io/v2/%s/%s/tags/list"
-	RegistryTag    = "https://hub.docker.com/v2/repositories/%s/%s/tags/%s/"
+    ChangeLog      = "CHANGELOG.md"
+    GcrRegistryTpl = "gcr.io/%s/%s"
+    GcrImages      = "https://gcr.io/v2/%s/tags/list"
+    GcrImageTags   = "https://gcr.io/v2/%s/%s/tags/list"
+    RegistryTag    = "https://hub.docker.com/v2/repositories/%s/%s/tags/%s/"
 )
 
 func (g *Gcr) Sync() {
 
-	gcrImages := g.gcrImageList()
-    
+    gcrImages := g.gcrImageList()
+    i := 0
     logrus.Infof("sync debug 55")
-	needSyncImages := g.compareCache(gcrImages)
+    needSyncImages := g.compareCache(gcrImages)
 
-	logrus.Infof("Google container registry images total: %d", len(gcrImages))
-	logrus.Infof("Number of images waiting to be processed: %d", len(needSyncImages))
+    logrus.Infof("Google container registry images total: %d", len(gcrImages))
+    logrus.Infof("111Number of images waiting to be processed: %d", len(needSyncImages))
 
-	processWg := new(sync.WaitGroup)
-	processWg.Add(len(needSyncImages))
+    processWg := new(sync.WaitGroup)
+    processWg.Add(len(needSyncImages))
 
-	for _, imageName := range needSyncImages {
-		tmpImageName := imageName
-		go func() {
-			defer func() {
-				g.ProcessLimit <- 1
-				processWg.Done()
-			}()
-			select {
-			case <-g.ProcessLimit:
-				g.Process(tmpImageName)
-			}
-		}()
-	}
+    for _, imageName := range needSyncImages {
+        i++
+        if i == 3 {
+                logrus.Infof("end of images")
+                goto endloog
+        }
+        tmpImageName := imageName
+        go func() {
+            defer func() {
+                g.ProcessLimit <- 1
+                processWg.Done()
+            }()
+            select {
+            case <-g.ProcessLimit:
+                g.Process(tmpImageName)
+            }
+        }()
+    }
 
-	// doc gen
-	chgWg := new(sync.WaitGroup)
-	chgWg.Add(1)
-	go func() {
-		defer chgWg.Done()
+endloog:
+    logrus.Infof("done process, will generate doc")
+    // doc gen
+    chgWg := new(sync.WaitGroup)
+    chgWg.Add(1)
+    go func() {
+        defer chgWg.Done()
 
-		var images []string
-		for {
-			select {
-			case imageName, ok := <-g.update:
-				if ok {
-					images = append(images, imageName)
-				} else {
-					goto ChangeLogDone
-				}
-			}
-		}
-	ChangeLogDone:
-		if len(images) > 0 && !g.TestMode {
-			g.Commit(images)
-		}
-	}()
+        var images []string
+        for {
+            select {
+            case imageName, ok := <-g.update:
+                if ok {
+                    images = append(images, imageName)
+                } else {
+                    goto ChangeLogDone
+                }
+            }
+        }
+    ChangeLogDone:
+        if len(images) > 0 && !g.TestMode {
+            g.Commit(images)
+        }
+    }()
 
-	processWg.Wait()
-	close(g.update)
-	chgWg.Wait()
+    processWg.Wait()
+    close(g.update)
+    chgWg.Wait()
 
 }
 
 func (g *Gcr) Monitor() {
 
-	if g.MonitorCount == -1 {
-		for {
-			select {
-			case <-time.Tick(5 * time.Second):
-				gcrImages := g.gcrImageList()
-				needSyncImages := g.compareCache(gcrImages)
-				logrus.Infof("Gcr images: %d    Waiting process: %d", len(gcrImages), len(needSyncImages))
-			}
-		}
-	} else {
-		for i := 0; i < g.MonitorCount; i++ {
-			select {
-			case <-time.Tick(5 * time.Second):
-				gcrImages := g.gcrImageList()
-				needSyncImages := g.compareCache(gcrImages)
-				logrus.Infof("Gcr images: %d    Waiting process: %d", len(gcrImages), len(needSyncImages))
-			}
-		}
-	}
+    if g.MonitorCount == -1 {
+        for {
+            select {
+            case <-time.Tick(5 * time.Second):
+                gcrImages := g.gcrImageList()
+                needSyncImages := g.compareCache(gcrImages)
+                logrus.Infof("Gcr images: %d    Waiting process: %d", len(gcrImages), len(needSyncImages))
+            }
+        }
+    } else {
+        for i := 0; i < g.MonitorCount; i++ {
+            select {
+            case <-time.Tick(5 * time.Second):
+                gcrImages := g.gcrImageList()
+                needSyncImages := g.compareCache(gcrImages)
+                logrus.Infof("Gcr images: %d    Waiting process: %d", len(gcrImages), len(needSyncImages))
+            }
+        }
+    }
 
 }
 
 func (g *Gcr) Compare() {
-	gcrImages := g.gcrImageList()
-	needSyncImages := g.needProcessImages(gcrImages)
+    gcrImages := g.gcrImageList()
+    needSyncImages := g.needProcessImages(gcrImages)
 
-	logrus.Infof("Google container registry images total: %d", len(gcrImages))
-	logrus.Infof("Number of images waiting to be processed: %d", len(needSyncImages))
+    logrus.Infof("Google container registry images total: %d", len(gcrImages))
+    logrus.Infof("222 Number of images waiting to be processed: %d", len(needSyncImages))
 
-	diff := utils.SliceDiff(gcrImages, needSyncImages)
-	sort.Strings(diff)
-	repoDir := strings.Split(g.GithubRepo, "/")[1]
-	f, err := os.OpenFile(filepath.Join(repoDir, g.NameSpace), os.O_CREATE|os.O_RDWR|os.O_TRUNC, 0644)
-	utils.CheckAndExit(err)
-	defer f.Close()
-	b, err := jsoniter.MarshalIndent(diff, "", "    ")
-	utils.CheckAndExit(err)
-	f.Write(b)
+    diff := utils.SliceDiff(gcrImages, needSyncImages)
+    sort.Strings(diff)
+    repoDir := strings.Split(g.GithubRepo, "/")[1]
+    f, err := os.OpenFile(filepath.Join(repoDir, g.NameSpace), os.O_CREATE|os.O_RDWR|os.O_TRUNC, 0644)
+    utils.CheckAndExit(err)
+    defer f.Close()
+    b, err := jsoniter.MarshalIndent(diff, "", "    ")
+    utils.CheckAndExit(err)
+    f.Write(b)
 }
 
 func (g *Gcr) Init() {
 
-	if g.Debug {
-		logrus.SetLevel(logrus.DebugLevel)
-	}
+    if g.Debug {
+        logrus.SetLevel(logrus.DebugLevel)
+    }
 
-	logrus.Infoln("111 Init http client.")
-	g.httpClient = &http.Client{
-		Timeout: g.HttpTimeOut,
-	}
-	if g.Proxy != "" {
-		p := func(_ *http.Request) (*url.URL, error) {
-			return url.Parse(g.Proxy)
-		}
-		g.httpClient.Transport = &http.Transport{Proxy: p}
-	}
+    logrus.Infoln("111 Init http client.")
+    g.httpClient = &http.Client{
+        Timeout: g.HttpTimeOut,
+    }
+    if g.Proxy != "" {
+        p := func(_ *http.Request) (*url.URL, error) {
+            return url.Parse(g.Proxy)
+        }
+        g.httpClient.Transport = &http.Transport{Proxy: p}
+    }
 
-	logrus.Infoln("Init docker client.")
-	dockerClient, err := client.NewEnvClient()
-	utils.CheckAndExit(err)
-	g.dockerClient = dockerClient
+    logrus.Infoln("Init docker client.")
+    dockerClient, err := client.NewEnvClient()
+    utils.CheckAndExit(err)
+    g.dockerClient = dockerClient
 
-	logrus.Infoln("Init limit channel.")
-	for i := 0; i < cap(g.QueryLimit); i++ {
-		g.QueryLimit <- 1
-	}
-	for i := 0; i < cap(g.ProcessLimit); i++ {
-		g.ProcessLimit <- 1
-	}
+    logrus.Infoln("Init limit channel.")
+    for i := 0; i < cap(g.QueryLimit); i++ {
+        g.QueryLimit <- 1
+    }
+    for i := 0; i < cap(g.ProcessLimit); i++ {
+        g.ProcessLimit <- 1
+    }
 
-	logrus.Infoln("Init update channel.")
-	g.update = make(chan string, 20)
+    logrus.Infoln("Init update channel.")
+    g.update = make(chan string, 20)
 
-	logrus.Infof("Init commit repo: %s", g.GithubRepo)
-	if g.GithubToken == "" {
-		utils.ErrorExit("Github Token is blank!", 1)
-	}
-	g.commitURL = "https://" + g.GithubToken + "@github.com/" + g.GithubRepo + ".git"
-	g.Clone()
+    logrus.Infof("Init commit repo: %s", g.GithubRepo)
+    if g.GithubToken == "" {
+        utils.ErrorExit("Github Token is blank!", 1)
+    }
+    g.commitURL = "https://" + g.GithubToken + "@github.com/" + g.GithubRepo + ".git"
+    g.Clone()
 
-	logrus.Infoln("Init success...")
+    logrus.Infoln("Init success...")
 }
