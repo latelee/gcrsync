@@ -11,10 +11,10 @@ language: go
 go:
   - 1.11.x
 
-before_script:
-  - curl https://gcr.io/v2/google-containers/tags/list
-  - echo "ddddddddddddddd"
-  - curl https://gcr.io/v2/google-containers/kube-apiserver-arm64/tags/list
+##before_script:
+  ##- curl https://gcr.io/v2/google-containers/tags/list
+  ##- echo "ddddddddddddddd"
+  ##- curl https://gcr.io/v2/google-containers/kube-apiserver-arm64/tags/list
 script:
   - go get github.com/latelee/gcrsync
   - gcrsync sync --namespace google-containers --querylimit 20 --processlimit 10 --httptimeout 10s --user ${DOCKER_USER} --password ${DOCKER_PASSWORD} --githubtoken ${GITHUB_TOKEN}
