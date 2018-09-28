@@ -32,7 +32,7 @@ import (
 	"time"
 
 	"github.com/json-iterator/go"
-
+	"github.com/Sirupsen/logrus"
 	"github.com/latelee/gcrsync/pkg/utils"
 )
 
