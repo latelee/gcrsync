@@ -68,7 +68,7 @@ func (g *Gcr) gcrImageList() []string {
 	var images []string
 	publicImageNames := g.gcrPublicImageNames()
 
-	logrus.Infof("gcrImageList() Number of gcr images: %d %s", len(publicImageNames), publicImageNames)
+	logrus.Infof("gcrImageList() Number of gcr images: %d", len(publicImageNames))
 
 	imgNameCh := make(chan string, 20)
 	imgGetWg := new(sync.WaitGroup)
@@ -99,7 +99,7 @@ func (g *Gcr) gcrImageList() []string {
 
 				var tags []string
 				jsoniter.UnmarshalFromString(jsoniter.Get(b, "tags").ToString(), &tags)
-
+                logrus.Infof("gcrImageList() 102 image %s, tags:%s", tmpImageName, tags)
 				for _, tag := range tags {
 					imgNameCh <- tmpImageName + ":" + tag
 				}
@@ -132,8 +132,13 @@ func (g *Gcr) gcrImageList() []string {
 	return images
 }
 
+/*
+获取指定命名空间（g.NameSpace）下的镜像名称（只是名称，还没有tag）
+*/
 func (g *Gcr) gcrPublicImageNames() []string {
 
+    // GET请求，https://gcr.io/v2/google-containers/tags/list
+    // 与curl https://gcr.io/v2/google-containers/tags/list应该是一样的
 	req, err := http.NewRequest("GET", fmt.Sprintf(GcrImages, g.NameSpace), nil)
 	utils.CheckAndExit(err)
 

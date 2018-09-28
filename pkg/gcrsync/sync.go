@@ -55,8 +55,8 @@ func (g *Gcr) Sync() {
     logrus.Infof("sync debug 55")
     needSyncImages := g.compareCache(gcrImages)
 
-    logrus.Infof("Sync() Google container registry images total: %d %s", len(gcrImages), gcrImages)
-    logrus.Infof("111Number of images waiting to be processed: %d", len(needSyncImages))
+    logrus.Infof("Sync() Google container registry images total: %d", len(gcrImages))
+    logrus.Infof("Sync() Number of images waiting to be processed: %d", len(needSyncImages))
 
     processWg := new(sync.WaitGroup)
     processWg.Add(len(needSyncImages))
@@ -139,7 +139,7 @@ func (g *Gcr) Compare() {
     gcrImages := g.gcrImageList()
     needSyncImages := g.needProcessImages(gcrImages)
 
-    logrus.Infof("Google container registry images total: %d", len(gcrImages))
+    logrus.Infof("Compare() Google container registry images total: %d", len(gcrImages))
     logrus.Infof("222 Number of images waiting to be processed: %d", len(needSyncImages))
 
     diff := utils.SliceDiff(gcrImages, needSyncImages)
