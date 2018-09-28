@@ -28,6 +28,7 @@ import (
 	"net/http"
 	"sync"
 	"time"
+    "strings"
 
 	"github.com/docker/docker/client"
 
@@ -100,8 +101,13 @@ func (g *Gcr) gcrImageList() []string {
 				var tags []string
 				jsoniter.UnmarshalFromString(jsoniter.Get(b, "tags").ToString(), &tags)
                 logrus.Infof("gcrImageList() 102 image %s, tags:%s", tmpImageName, tags)
+                again:
 				for _, tag := range tags {
+                    if len(tag) > 12 || strings.Contains(tag, "alpha") || strings.Contains(tag, "beta") || strings.Contains(tag, "rc") {
+                    continue again
+                    }
 					imgNameCh <- tmpImageName + ":" + tag
+                    logrus.Infof("gcrImageList() 109 image %s", imgNameCh)
 				}
 			}
 

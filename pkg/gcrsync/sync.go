@@ -62,7 +62,7 @@ func (g *Gcr) Sync() {
     processWg.Add(len(needSyncImages))
 
     for _, imageName := range needSyncImages {
-        i++
+        //i++
         if i == 3 {
                 logrus.Infof("end of images")
                 goto endloog
