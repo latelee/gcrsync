@@ -55,7 +55,7 @@ func (g *Gcr) Sync() {
     logrus.Infof("sync debug 55")
     needSyncImages := g.compareCache(gcrImages)
 
-    logrus.Infof("Sync() Google container registry images total: %d", len(gcrImages))
+    logrus.Infof("Sync() Google container registry images total: %d %s", len(gcrImages), gcrImages)
     logrus.Infof("Sync() Number of images waiting to be processed: %d", len(needSyncImages))
 
     processWg := new(sync.WaitGroup)
