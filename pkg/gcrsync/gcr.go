@@ -104,10 +104,11 @@ func (g *Gcr) gcrImageList() []string {
                 again:
 				for _, tag := range tags {
                     if len(tag) > 12 || strings.Contains(tag, "alpha") || strings.Contains(tag, "beta") || strings.Contains(tag, "rc") {
-                    continue again
+                    logrus.Infof("gcrImageList() 107 image %s", tag)
+                    continue
                     }
 					imgNameCh <- tmpImageName + ":" + tag
-                    logrus.Infof("gcrImageList() 109 image %s", imgNameCh)
+                    logrus.Infof("gcrImageList() 109 image %s", tag)
 				}
 			}
 
