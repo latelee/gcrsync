@@ -100,15 +100,15 @@ func (g *Gcr) gcrImageList() []string {
 
 				var tags []string
 				jsoniter.UnmarshalFromString(jsoniter.Get(b, "tags").ToString(), &tags)
-                logrus.Infof("gcrImageList() 102 image %s, tags:%s", tmpImageName, tags)
+                //logrus.Infof("gcrImageList() 102 image %s, tags:%s", tmpImageName, tags)
                 
 				for _, tag := range tags {
                     if len(tag) > 12 || strings.Contains(tag, "alpha") || strings.Contains(tag, "beta") || strings.Contains(tag, "rc") {
-                    logrus.Infof("gcrImageList() 107 image %s", tag)
+                    //logrus.Infof("gcrImageList() 107 image %s", tag)
                     continue
                     }
 					imgNameCh <- tmpImageName + ":" + tag
-                    logrus.Infof("gcrImageList() 109 image %s", tag)
+                    //logrus.Infof("gcrImageList() 109 image %s", tag)
 				}
 			}
 
