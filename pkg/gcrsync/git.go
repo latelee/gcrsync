@@ -42,6 +42,8 @@ func (g *Gcr) Commit(images []string) {
 	repoChangeLog := filepath.Join(repoDir, ChangeLog)
 	repoUpdateFile := filepath.Join(repoDir, g.NameSpace)
 
+    logrus.Infof("file: %s %s", repoChangeLog, repoUpdateFile)
+    
 	var content []byte
 	chgLog, err := os.Open(repoChangeLog)
 	if utils.CheckErr(err) {

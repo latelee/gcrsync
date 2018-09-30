@@ -143,7 +143,20 @@ func (g *Gcr) gcrImageList() []string {
 	imgGetWg.Wait()
 	close(imgNameCh)
 	imgReceiveWg.Wait()
-	return images
+    
+    i := 0
+    var out []string
+    for _, tmp := range images {
+        i++
+        //logrus.Infof("cnt: %d\n", i)
+        if i > 5 {
+            break
+        }
+        out = append(out , tmp)
+        
+    }
+    logrus.Infof("output: %s", out)
+	return out
 }
 
 /*

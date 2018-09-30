@@ -103,7 +103,7 @@ func (g *Gcr) queryRegistryImage(imageName string) bool {
 }
 
 /*
-对比另一个仓库上已经有了的文件，如果已存在，则不下载。
+对比另一个仓库上已经有了的文件(google-containers)，如果已存在，则不下载。
 
 */
 func (g *Gcr) compareCache(images []string) []string {
