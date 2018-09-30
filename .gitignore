@@ -14,3 +14,4 @@
 dist
 gcr.db
 CHANGELOG.md
+push.sh

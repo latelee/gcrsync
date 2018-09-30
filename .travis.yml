@@ -17,4 +17,4 @@ go:
   ##- curl https://gcr.io/v2/google-containers/kube-apiserver-arm64/tags/list
 script:
   - go get github.com/latelee/gcrsync
-  - gcrsync sync --namespace google-containers --querylimit 20 --processlimit 10 --httptimeout 10s --user ${DOCKER_USER} --password ${DOCKER_PASSWORD} --githubtoken ${GITHUB_TOKEN}
+  - travis_wait 30 gcrsync sync --namespace google-containers --querylimit 20 --processlimit 10 --httptimeout 10s --user ${DOCKER_USER} --password ${DOCKER_PASSWORD} --githubtoken ${GITHUB_TOKEN}
