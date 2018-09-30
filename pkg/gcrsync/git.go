@@ -68,6 +68,7 @@ func (g *Gcr) Commit(images []string) {
 	if utils.CheckErr(err) {
 		defer updateFile.Close()
 		content, err = ioutil.ReadAll(updateFile)
+        logrus.Infof("ReadAll ret: %s", err)
 		utils.CheckAndExit(err)
 	}
 	utils.CheckAndExit(jsoniter.Unmarshal(content, &synchronizedImages))

@@ -149,7 +149,7 @@ func (g *Gcr) gcrImageList() []string {
     for _, tmp := range images {
         i++
         //logrus.Infof("cnt: %d\n", i)
-        if i > 5 {
+        if i > 3 {
             break
         }
         out = append(out , tmp)
