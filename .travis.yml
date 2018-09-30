@@ -15,6 +15,7 @@ go:
   ##- curl https://gcr.io/v2/google-containers/tags/list
   ##- echo "ddddddddddddddd"
   ##- curl https://gcr.io/v2/google-containers/kube-apiserver-arm64/tags/list
+  ## travis_wait 30 
 script:
   - go get github.com/latelee/gcrsync
-  - travis_wait 30 gcrsync sync --namespace google-containers --querylimit 20 --processlimit 10 --httptimeout 10s --user ${DOCKER_USER} --password ${DOCKER_PASSWORD} --githubtoken ${GITHUB_TOKEN}
+  - gcrsync sync --namespace google-containers --querylimit 20 --processlimit 10 --httptimeout 10s --user ${DOCKER_USER} --password ${DOCKER_PASSWORD} --githubtoken ${GITHUB_TOKEN}

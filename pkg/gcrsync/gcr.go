@@ -79,11 +79,13 @@ func (g *Gcr) gcrImageList() []string {
 	for _, imageName := range publicImageNames {
 
 		tmpImageName := imageName
+        /*
         if strings.Contains(tmpImageName, "arm") || strings.Contains(tmpImageName, "ppc") ||
         strings.Contains(tmpImageName, "s390x") {
             //logrus.Infof("gcrImageList() 84 image %s", tmpImageName)
             continue
             }
+        */
 		go func() {
 			defer func() {
 				g.QueryLimit <- 1
