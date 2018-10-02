@@ -37,21 +37,27 @@ import (
 )
 
 func (g *Gcr) Commit(images []string) {
-
 	repoDir := strings.Split(g.GithubRepo, "/")[1]
-	repoChangeLog := filepath.Join(repoDir, ChangeLog)
+	repoChangeLog := filepath.Join(repoDir, g.NameSpace)
+    os.MkdirAll(repoChangeLog, 0755)
+    repoChangeLog = filepath.Join(repoChangeLog, ChangeLog)
+    
 	repoUpdateFile := filepath.Join(repoDir, g.NameSpace)
+    os.MkdirAll(repoChangeLog, 0755)
+    repoUpdateFile = filepath.Join(repoUpdateFile, g.NameSpace)
 
     logrus.Infof("file: %s %s", repoChangeLog, repoUpdateFile)
     
+    // 如果不存在，则自动创建
 	var content []byte
 	chgLog, err := os.Open(repoChangeLog)
-	if utils.CheckErr(err) {
-		defer chgLog.Close()
+    defer chgLog.Close()
+    // 如果能打开，则读取已有内容
+    if err == nil {
 		content, err = ioutil.ReadAll(chgLog)
 		utils.CheckAndExit(err)
 	}
-
+    // 带创建功能的打开方式
 	chgLog, err = os.OpenFile(repoChangeLog, os.O_CREATE|os.O_TRUNC|os.O_RDWR, 0644)
 	utils.CheckAndExit(err)
 	defer chgLog.Close()
@@ -63,14 +69,15 @@ func (g *Gcr) Commit(images []string) {
 	}
 	chgLog.WriteString(updateInfo + string(content))
 
+    // 如果不存在，则创建文件
 	var synchronizedImages []string
 	updateFile, err := os.Open(repoUpdateFile)
-	if utils.CheckErr(err) {
-		defer updateFile.Close()
-		content, err = ioutil.ReadAll(updateFile)
-        logrus.Infof("ReadAll ret: %s", err)
-		utils.CheckAndExit(err)
+    defer updateFile.Close()
+    content = []byte("[]") // 使用默认的'[]'，否则json解析出错
+	if err == nil {
+		content, _ = ioutil.ReadAll(updateFile)
 	}
+
 	utils.CheckAndExit(jsoniter.Unmarshal(content, &synchronizedImages))
 	synchronizedImages = append(synchronizedImages, images...)
 	sort.Strings(synchronizedImages)
@@ -83,12 +90,12 @@ func (g *Gcr) Commit(images []string) {
 
     logrus.Infof("will commit to github")
 	utils.GitCmd(repoDir, "config", "--global", "push.default", "simple")
-	utils.GitCmd(repoDir, "config", "--global", "user.email", "li@latelee.org")
-	utils.GitCmd(repoDir, "config", "--global", "user.name", "Late Lee")
+	utils.GitCmd(repoDir, "config", "--global", "user.email", g.GithubUser)
+	utils.GitCmd(repoDir, "config", "--global", "user.name", g.GithubEmail)
 	utils.GitCmd(repoDir, "add", ".")
+    utils.GitCmd(repoDir, "add", ".", "-u")
 	utils.GitCmd(repoDir, "commit", "-m", g.CommitMsg)
 	utils.GitCmd(repoDir, "push", "--force", g.commitURL, "master")
-
 }
 
 func (g *Gcr) Clone() {

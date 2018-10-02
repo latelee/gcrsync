@@ -41,7 +41,8 @@ import (
 )
 
 const (
-    ChangeLog      = "CHANGELOG.md"
+    //ChangeLog      = "CHANGELOG.md"
+    ChangeLog      = "README.md"
     GcrRegistryTpl = "gcr.io/%s/%s"
     GcrImages      = "https://gcr.io/v2/%s/tags/list"
     GcrImageTags   = "https://gcr.io/v2/%s/%s/tags/list"

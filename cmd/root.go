@@ -34,7 +34,7 @@ import (
 
 var debug, test bool
 var proxy, dockerUser, dockerPassword, nameSpace string
-var githubRepo, githubToken string
+var githubRepo, githubUser, githubEmail, githubToken string
 var queryLimit, processLimit, monitorCount int
 var httpTimeout time.Duration
 
@@ -54,6 +54,8 @@ A docker image sync tool for Google container registry (gcr.io).`,
 			ProcessLimit:   make(chan int, processLimit),
 			HttpTimeOut:    httpTimeout,
 			GithubRepo:     githubRepo,
+            GithubUser:     githubUser,
+            GithubEmail:    githubEmail,
 			GithubToken:    githubToken,
 			MonitorCount:   monitorCount,
 			TestMode:       test,
@@ -81,5 +83,7 @@ func init() {
 	rootCmd.PersistentFlags().DurationVar(&httpTimeout, "httptimeout", 10*time.Second, "http request timeout")
 	rootCmd.PersistentFlags().IntVar(&processLimit, "processlimit", 10, "image process limit")
 	rootCmd.PersistentFlags().StringVar(&githubRepo, "githubrepo", "latelee/gcr.io", "github commit repo")
-	rootCmd.PersistentFlags().StringVar(&githubToken, "githubtoken", "", "github commit token")
+    rootCmd.PersistentFlags().StringVar(&githubUser, "githubuser", "Late Lee", "github commit user name")
+    rootCmd.PersistentFlags().StringVar(&githubEmail, "githubemail", "li@latelee.org", "github commit email")
+	rootCmd.PersistentFlags().StringVar(&githubToken, "githubtoken", "", "github commit token(must specify)")
 }

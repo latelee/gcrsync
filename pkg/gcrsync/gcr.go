@@ -49,6 +49,8 @@ type Gcr struct {
 	NameSpace      string
 	GithubToken    string
 	GithubRepo     string
+    GithubUser     string
+    GithubEmail    string
 	CommitMsg      string
 	MonitorCount   int
 	TestMode       bool
@@ -75,7 +77,6 @@ func (g *Gcr) gcrImageList() []string {
 	imgGetWg := new(sync.WaitGroup)
 	imgGetWg.Add(len(publicImageNames))
 
-    logrus.Infof("debug 77")
 	for _, imageName := range publicImageNames {
 
 		tmpImageName := imageName
@@ -107,7 +108,7 @@ func (g *Gcr) gcrImageList() []string {
 				var tags []string
 				jsoniter.UnmarshalFromString(jsoniter.Get(b, "tags").ToString(), &tags)
                 //logrus.Infof("gcrImageList() 102 image %s, tags:%s", tmpImageName, tags)
-                
+                // 去掉一些标签：包括alpha、beta、rc，等等，这些认为是测试版本
 				for _, tag := range tags {
                     if len(tag) > 12 || strings.Contains(tag, "alpha") || 
                     strings.Contains(tag, "beta") || strings.Contains(tag, "rc") {
@@ -118,7 +119,6 @@ func (g *Gcr) gcrImageList() []string {
                     //logrus.Infof("gcrImageList() 109 image %s", tag)
 				}
 			}
-
 		}()
 	}
 
