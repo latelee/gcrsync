@@ -49,6 +49,9 @@ const (
     RegistryTag    = "https://hub.docker.com/v2/repositories/%s/%s/tags/%s/"
 )
 
+var CntIter int
+var CntTotal int
+
 func (g *Gcr) Sync() {
 
     gcrImages := g.gcrImageList()
@@ -61,7 +64,9 @@ func (g *Gcr) Sync() {
 
     processWg := new(sync.WaitGroup)
     processWg.Add(len(needSyncImages))
-
+    
+    CntTotal = len(needSyncImages)
+    
     for _, imageName := range needSyncImages {
         //i++
         if i == 3 {
