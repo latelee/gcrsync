@@ -140,11 +140,12 @@ func (g *Gcr) gcrImageList() []string {
 	imgSetExit:
 	}()
 
-    logrus.Infof("debug 130")
 	imgGetWg.Wait()
 	close(imgNameCh)
 	imgReceiveWg.Wait()
     
+    return images
+    /*
     i := 0
     var out []string
     for _, tmp := range images {
@@ -156,8 +157,9 @@ func (g *Gcr) gcrImageList() []string {
         out = append(out , tmp)
         
     }
-    logrus.Infof("output: %s", out)
+    //logrus.Infof("output: %s", out)
 	return out
+    */
 }
 
 /*

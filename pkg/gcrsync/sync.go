@@ -53,7 +53,6 @@ func (g *Gcr) Sync() {
 
     gcrImages := g.gcrImageList()
     i := 0
-    logrus.Infof("sync debug 55")
     needSyncImages := g.compareCache(gcrImages)
 
     //logrus.Infof("Sync() Google container registry images total: %d %s", len(gcrImages), gcrImages)
