@@ -63,7 +63,8 @@ func (g *Gcr) Sync() {
     logrus.Infof("Sync() Number of images waiting to be processed: %d", len(needSyncImages))
 
     processWg := new(sync.WaitGroup)
-    processWg.Add(len(needSyncImages))
+    //processWg.Add(len(needSyncImages))
+    processWg.Add(50)
     
     CntTotal = len(needSyncImages)
     
