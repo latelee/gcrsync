@@ -45,6 +45,8 @@ Sync gcr images.`,
 			ProcessLimit:   make(chan int, processLimit),
 			HttpTimeOut:    httpTimeout,
 			GithubRepo:     githubRepo,
+            GithubUser:     githubUser,
+            GithubEmail:    githubEmail,
 			GithubToken:    githubToken,
 			CommitMsg:      commitMsg,
 			Debug:          debug,
@@ -56,5 +58,5 @@ Sync gcr images.`,
 
 func init() {
 	rootCmd.AddCommand(syncCmd)
-	syncCmd.PersistentFlags().StringVar(&commitMsg, "commitmsg", "Travis CI Auto Synchronized.", "commit message")
+	//syncCmd.PersistentFlags().StringVar(&commitMsg, "commitmsg", "Travis CI Auto Synchronized.", "commit message")
 }
