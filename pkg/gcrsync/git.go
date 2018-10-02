@@ -39,18 +39,26 @@ import (
 func (g *Gcr) Commit(images []string) {
 	repoDir := strings.Split(g.GithubRepo, "/")[1]
 	repoChangeLog := filepath.Join(repoDir, g.NameSpace)
-    os.MkdirAll(repoChangeLog, 0755)
+    logrus.Infof("file111: %s %s", repoChangeLog)
+    err := os.MkdirAll(repoChangeLog, 0755)
+    if err != nil {
+        logrus.Errorln(err)
+    }
     repoChangeLog = filepath.Join(repoChangeLog, ChangeLog)
+    logrus.Infof("file222: %s %s", repoChangeLog)
     
 	repoUpdateFile := filepath.Join(repoDir, g.NameSpace)
-    os.MkdirAll(repoChangeLog, 0755)
+    err := os.MkdirAll(repoUpdateFile, 0755)
+    if err != nil {
+        logrus.Errorln(err)
+    }
     repoUpdateFile = filepath.Join(repoUpdateFile, g.NameSpace)
 
     logrus.Infof("file: %s %s", repoChangeLog, repoUpdateFile)
-    
-    // 如果不存在，则自动创建
+
 	var content []byte
 	chgLog, err := os.Open(repoChangeLog)
+    logrus.Errorln(err)
     defer chgLog.Close()
     // 如果能打开，则读取已有内容
     if err == nil {
