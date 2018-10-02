@@ -111,7 +111,8 @@ func (g *Gcr) gcrImageList() []string {
                 // 去掉一些标签：包括alpha、beta、rc，等等，这些认为是测试版本
 				for _, tag := range tags {
                     if len(tag) > 12 || strings.Contains(tag, "alpha") || 
-                    strings.Contains(tag, "beta") || strings.Contains(tag, "rc") {
+                    strings.Contains(tag, "beta") || strings.Contains(tag, "rc") || 
+                    strings.Contains(tag, "test") {
                     //logrus.Infof("gcrImageList() 107 image %s", tag)
                     continue
                     }

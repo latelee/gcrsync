@@ -97,7 +97,7 @@ func (g *Gcr) Commit(images []string) {
 	defer newUpdateFile.Close()
 	newUpdateFile.Write(buf)
 
-    logrus.Infof("will commit to github")
+    logrus.Infof("will commit to github %s %s\n", g.GithubUser, g.GithubEmail)
 	utils.GitCmd(repoDir, "config", "--global", "push.default", "simple")
 	utils.GitCmd(repoDir, "config", "--global", "user.email", g.GithubUser)
 	utils.GitCmd(repoDir, "config", "--global", "user.name", g.GithubEmail)
