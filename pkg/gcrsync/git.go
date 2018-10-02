@@ -39,13 +39,13 @@ import (
 func (g *Gcr) Commit(images []string) {
 	repoDir := strings.Split(g.GithubRepo, "/")[1]
 	repoChangeLog := filepath.Join(repoDir, g.NameSpace)
-    logrus.Infof("file111: %s %s", repoChangeLog)
+    logrus.Infof("file111: %s", repoChangeLog)
     err := os.MkdirAll(repoChangeLog, 0755)
     if err != nil {
         logrus.Errorln(err)
     }
     repoChangeLog = filepath.Join(repoChangeLog, ChangeLog)
-    logrus.Infof("file222: %s %s", repoChangeLog)
+    logrus.Infof("file222: %s", repoChangeLog)
     
 	repoUpdateFile := filepath.Join(repoDir, g.NameSpace)
     err = os.MkdirAll(repoUpdateFile, 0755)
@@ -71,7 +71,8 @@ func (g *Gcr) Commit(images []string) {
 	defer chgLog.Close()
 
 	loc, _ := time.LoadLocation("Asia/Shanghai")
-	updateInfo := fmt.Sprintf("### %s Update:\n\n", time.Now().In(loc).Format("2006-01-02 15:04:05"))
+    updateTime := time.Now().In(loc).Format("2006-01-02 15:04:05")
+	updateInfo := fmt.Sprintf("### %s Update:\n\n", updateTime)
 	for _, imageName := range images {
 		updateInfo += "- " + fmt.Sprintf(GcrRegistryTpl, g.NameSpace, imageName) + "\n"
 	}
@@ -102,7 +103,7 @@ func (g *Gcr) Commit(images []string) {
 	utils.GitCmd(repoDir, "config", "--global", "user.name", g.GithubEmail)
 	utils.GitCmd(repoDir, "add", ".")
     utils.GitCmd(repoDir, "add", ".", "-u")
-	utils.GitCmd(repoDir, "commit", "-m", g.CommitMsg)
+	utils.GitCmd(repoDir, "commit", "-m", fmt.Sprintf("Auto sync at %s", updateTime))
 	utils.GitCmd(repoDir, "push", "--force", g.commitURL, "master")
 }
 
