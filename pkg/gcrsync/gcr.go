@@ -80,13 +80,7 @@ func (g *Gcr) gcrImageList() []string {
 	for _, imageName := range publicImageNames {
 
 		tmpImageName := imageName
-        
-        if strings.Contains(tmpImageName, "arm") || strings.Contains(tmpImageName, "ppc") ||
-        strings.Contains(tmpImageName, "s390x") {
-            logrus.Infof("gcrImageList() 84 image %s", tmpImageName)
-            continue
-            }
-        
+
 		go func() {
 			defer func() {
 				g.QueryLimit <- 1
@@ -182,12 +176,22 @@ func (g *Gcr) gcrPublicImageNames() []string {
 	var imageNames []string
 	jsoniter.UnmarshalFromString(jsoniter.Get(b, "child").ToString(), &imageNames)
     
-    logrus.Infof("gcrImageList() Number of gcr images: %d", len(imageNames))
+    logrus.Infof("gcrPublicImageNames() Number of gcr images: %d", len(imageNames))
+
+    var outtmp []string
+    for _, tmp := range imageNames {
+        tmpImageName := tmp
+        if strings.Contains(tmpImageName, "-arm") || strings.Contains(tmpImageName, "-ppc") ||
+        strings.Contains(tmpImageName, "-s390x") {
+            logrus.Infof("gcrPublicImageNames() 188 image %s", tmpImageName)
+            continue
+            }
+        outtmp = append(outtmp , tmp)
+    }
     
     i := 0
-    
     var out []string
-    for _, tmp := range imageNames {
+    for _, tmp := range outtmp {
         i++
         //取前面3个100
         if i > 200 {
