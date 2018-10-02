@@ -79,8 +79,8 @@ func (g *Gcr) Sync() {
     }
     
     for _, imageName := range out {
-        //i++
-        if i == 3 {
+        i++
+        if i == 50 {
                 logrus.Infof("end of images")
                 goto endloog
         }
