@@ -109,7 +109,7 @@ func (g *Gcr) compareCache(images []string) []string {
 	var cachedImages []string
 	repoDir := strings.Split(g.GithubRepo, "/")[1]
     updateFile := filepath.Join(repoDir, g.NameSpace)
-    updateFile = filepath.Join(updateFile, ImageListFiles)
+    updateFile = filepath.Join(updateFile, ImageListFile)
     logrus.Infof("registry: %s namespace: %s file: %s", repoDir, g.NameSpace, updateFile)
 	
     f, err := os.Open(updateFile)

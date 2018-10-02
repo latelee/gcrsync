@@ -74,7 +74,7 @@ func (g *Gcr) Commit(images []string) {
         tmpImage := strings.Split(imageName, ":")[0]
         tmpTag := strings.Split(imageName, ":")[1]
 		updateInfo += "- " + fmt.Sprintf("[gcr.io/%s/%s](https://hub.docker.com/r/%s/%s/tags)", g.NameSpace, tmpImage, g.DockerUser, tmpImage) + "\n"
-        updateInfo += fmt.Sprintf("Tags: [%s]\n\n", tmpTag)
+        updateInfo += fmt.Sprintf("Tags: [%s]\n\n", tmpTag)46
 	}
 	chgLog.WriteString(updateInfo + string(content))
 
