@@ -64,23 +64,23 @@ func (g *Gcr) Sync() {
 
     processWg := new(sync.WaitGroup)
     //processWg.Add(len(needSyncImages))
-    processWg.Add(50)
+    processWg.Add(20)
     
     CntTotal = len(needSyncImages)
     
     i := 0
     var out []string
     for _, tmp := range needSyncImages {
-        //i++
+        i++
         //logrus.Infof("cnt: %d\n", i)
-        if i > 100 {
+        if i > 20 {
             break
         }
         out = append(out , tmp)
     }
     
     for _, imageName := range out {
-        i++
+        //i++
         if i == 50 {
                 logrus.Infof("end of images")
                 goto endloog
