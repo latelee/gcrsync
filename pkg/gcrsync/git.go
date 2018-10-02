@@ -48,7 +48,7 @@ func (g *Gcr) Commit(images []string) {
     logrus.Infof("file222: %s %s", repoChangeLog)
     
 	repoUpdateFile := filepath.Join(repoDir, g.NameSpace)
-    err := os.MkdirAll(repoUpdateFile, 0755)
+    err = os.MkdirAll(repoUpdateFile, 0755)
     if err != nil {
         logrus.Errorln(err)
     }
