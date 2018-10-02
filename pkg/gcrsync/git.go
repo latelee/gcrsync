@@ -43,7 +43,7 @@ func (g *Gcr) Commit(images []string) {
     if err != nil {
         logrus.Errorln(err)
     }
-    readmeFile = filepath.Join(readmeFile, ReadmeFiles)
+    readmeFile = filepath.Join(readmeFile, ReadmeFile)
 	repoUpdateFile := filepath.Join(repoDir, g.NameSpace)
     err = os.MkdirAll(repoUpdateFile, 0755)
     if err != nil {
@@ -74,7 +74,7 @@ func (g *Gcr) Commit(images []string) {
         tmpImage := strings.Split(imageName, ":")[0]
         tmpTag := strings.Split(imageName, ":")[1]
 		updateInfo += "- " + fmt.Sprintf("[gcr.io/%s/%s](https://hub.docker.com/r/%s/%s/tags)", g.NameSpace, tmpImage, g.DockerUser, tmpImage) + "\n"
-        updateInfo += fmt.Sprintf("Tags: [%s]\n\n", tmpTag)46
+        updateInfo += fmt.Sprintf("Tags: [%s]\n\n", tmpTag)
 	}
 	chgLog.WriteString(updateInfo + string(content))
 
