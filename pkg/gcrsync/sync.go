@@ -55,7 +55,7 @@ var CntTotal int
 func (g *Gcr) Sync() {
 
     gcrImages := g.gcrImageList()
-    i := 0
+
     needSyncImages := g.compareCache(gcrImages)
 
     //logrus.Infof("Sync() Google container registry images total: %d %s", len(gcrImages), gcrImages)
@@ -67,7 +67,18 @@ func (g *Gcr) Sync() {
     
     CntTotal = len(needSyncImages)
     
-    for _, imageName := range needSyncImages {
+    i := 0
+    var out []string
+    for _, tmp := range needSyncImages {
+        i++
+        //logrus.Infof("cnt: %d\n", i)
+        if i > 100 {
+            break
+        }
+        out = append(out , tmp)
+    }
+    
+    for _, imageName := range out {
         //i++
         if i == 3 {
                 logrus.Infof("end of images")

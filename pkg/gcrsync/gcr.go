@@ -183,12 +183,15 @@ func (g *Gcr) gcrPublicImageNames() []string {
         tmpImageName := tmp
         if strings.Contains(tmpImageName, "-arm") || strings.Contains(tmpImageName, "-ppc") ||
         strings.Contains(tmpImageName, "-s390x") {
-            logrus.Infof("gcrPublicImageNames() 188 image %s", tmpImageName)
+            //logrus.Infof("gcrPublicImageNames() 188 image %s", tmpImageName)
             continue
             }
         outtmp = append(outtmp , tmp)
     }
     
+    return outtmp
+    
+    // 临时不要
     i := 0
     var out []string
     for _, tmp := range outtmp {
