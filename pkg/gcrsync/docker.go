@@ -56,7 +56,7 @@ func (g *Gcr) Process(imageName string) {
 		}
 		io.Copy(ioutil.Discard, r)
 		r.Close()
-		logrus.Infof("11 Pull image: %s success.", oldImageName)
+		logrus.Infof("Pull image: %s success.", oldImageName)
 
 		// tag it
 		err = g.dockerClient.ImageTag(ctx, oldImageName, newImageName)
@@ -92,7 +92,7 @@ func (g *Gcr) Process(imageName string) {
 		logrus.Debugf("Remove image: %s success.", oldImageName)
 
 	}
-	logrus.Infoln("Append CHANGELOG")
+	logrus.Infoln("Append README.md")
 	g.update <- imageName
 	logrus.Debugln("Done.")
 

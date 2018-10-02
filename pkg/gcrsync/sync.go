@@ -41,8 +41,8 @@ import (
 )
 
 const (
-    //ChangeLog      = "CHANGELOG.md"
-    ChangeLog      = "README.md"
+    ImageListFile   = "ImageList"
+    ReadmeFile      = "README.md"
     GcrRegistryTpl = "gcr.io/%s/%s"
     GcrImages      = "https://gcr.io/v2/%s/tags/list"
     GcrImageTags   = "https://gcr.io/v2/%s/%s/tags/list"
@@ -97,11 +97,11 @@ endloog:
                 if ok {
                     images = append(images, imageName)
                 } else {
-                    goto ChangeLogDone
+                    goto ReadmeFileDone
                 }
             }
         }
-    ChangeLogDone:
+    ReadmeFileDone:
         if len(images) > 0 && !g.TestMode {
             g.Commit(images)
         }

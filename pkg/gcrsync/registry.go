@@ -102,19 +102,18 @@ func (g *Gcr) queryRegistryImage(imageName string) bool {
 }
 
 /*
-对比另一个仓库上已经有了的文件(xxx/google-containers/google-containers)的内容，如果已存在，则不下载。
+对比另一个仓库上已经有了的文件(xxx/google-containers/ImageList)的内容，如果已存在，则不下载。
 如果不存在这个文件，则直接返回
 */
 func (g *Gcr) compareCache(images []string) []string {
 	var cachedImages []string
 	repoDir := strings.Split(g.GithubRepo, "/")[1]
     updateFile := filepath.Join(repoDir, g.NameSpace)
-    updateFile = filepath.Join(updateFile, g.NameSpace)
+    updateFile = filepath.Join(updateFile, ImageListFiles)
     logrus.Infof("registry: %s namespace: %s file: %s", repoDir, g.NameSpace, updateFile)
 	
     f, err := os.Open(updateFile)
     defer f.Close()
-	
     if err == nil {
         b, err := ioutil.ReadAll(f)
         utils.CheckAndExit(err)

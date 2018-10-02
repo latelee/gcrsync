@@ -38,27 +38,23 @@ import (
 
 func (g *Gcr) Commit(images []string) {
 	repoDir := strings.Split(g.GithubRepo, "/")[1]
-	repoChangeLog := filepath.Join(repoDir, g.NameSpace)
-    logrus.Infof("file111: %s", repoChangeLog)
-    err := os.MkdirAll(repoChangeLog, 0755)
+	readmeFile := filepath.Join(repoDir, g.NameSpace)
+    err := os.MkdirAll(readmeFile, 0755)
     if err != nil {
         logrus.Errorln(err)
     }
-    repoChangeLog = filepath.Join(repoChangeLog, ChangeLog)
-    logrus.Infof("file222: %s", repoChangeLog)
-    
+    readmeFile = filepath.Join(readmeFile, ReadmeFiles)
 	repoUpdateFile := filepath.Join(repoDir, g.NameSpace)
     err = os.MkdirAll(repoUpdateFile, 0755)
     if err != nil {
         logrus.Errorln(err)
     }
-    repoUpdateFile = filepath.Join(repoUpdateFile, g.NameSpace)
+    repoUpdateFile = filepath.Join(repoUpdateFile, ImageListFile)
 
-    logrus.Infof("file: %s %s", repoChangeLog, repoUpdateFile)
+    logrus.Infof("file: %s %s", readmeFile, repoUpdateFile)
 
 	var content []byte
-	chgLog, err := os.Open(repoChangeLog)
-    logrus.Errorln(err)
+	chgLog, err := os.Open(readmeFile)
     defer chgLog.Close()
     // 如果能打开，则读取已有内容
     if err == nil {
@@ -66,7 +62,7 @@ func (g *Gcr) Commit(images []string) {
 		utils.CheckAndExit(err)
 	}
     // 带创建功能的打开方式
-	chgLog, err = os.OpenFile(repoChangeLog, os.O_CREATE|os.O_TRUNC|os.O_RDWR, 0644)
+	chgLog, err = os.OpenFile(readmeFile, os.O_CREATE|os.O_TRUNC|os.O_RDWR, 0644)
 	utils.CheckAndExit(err)
 	defer chgLog.Close()
 
@@ -74,7 +70,11 @@ func (g *Gcr) Commit(images []string) {
     updateTime := time.Now().In(loc).Format("2006-01-02 15:04:05")
 	updateInfo := fmt.Sprintf("### %s Update:\n\n", updateTime)
 	for _, imageName := range images {
-		updateInfo += "- " + fmt.Sprintf(GcrRegistryTpl, g.NameSpace, imageName) + "\n"
+        // 分离镜像名称和标签
+        tmpImage := strings.Split(imageName, ":")[0]
+        tmpTag := strings.Split(imageName, ":")[1]
+		updateInfo += "- " + fmt.Sprintf("[gcr.io/%s/%s](https://hub.docker.com/r/%s/%s/tags)", g.NameSpace, tmpImage, g.DockerUser, tmpImage) + "\n"
+        updateInfo += fmt.Sprintf("Tags: [%s]\n\n", tmpTag)
 	}
 	chgLog.WriteString(updateInfo + string(content))
 
@@ -99,8 +99,8 @@ func (g *Gcr) Commit(images []string) {
 
     logrus.Infof("will commit to github %s %s\n", g.GithubUser, g.GithubEmail)
 	utils.GitCmd(repoDir, "config", "--global", "push.default", "simple")
-	utils.GitCmd(repoDir, "config", "--global", "user.email", g.GithubUser)
-	utils.GitCmd(repoDir, "config", "--global", "user.name", g.GithubEmail)
+	utils.GitCmd(repoDir, "config", "--global", "user.name", g.GithubUser)
+	utils.GitCmd(repoDir, "config", "--global", "user.email", g.GithubEmail)
 	utils.GitCmd(repoDir, "add", ".")
     utils.GitCmd(repoDir, "add", ".", "-u")
 	utils.GitCmd(repoDir, "commit", "-m", fmt.Sprintf("Auto sync at %s", updateTime))
