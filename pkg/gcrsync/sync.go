@@ -62,29 +62,23 @@ func (g *Gcr) Sync() {
     logrus.Infof("Sync() Google container registry images total: %d", len(gcrImages))
     logrus.Infof("Sync() Number of images waiting to be processed: %d", len(needSyncImages))
 
+    CntTotal = 100 //len(needSyncImages)
     processWg := new(sync.WaitGroup)
     //processWg.Add(len(needSyncImages))
-    processWg.Add(20)
-    
-    CntTotal = len(needSyncImages)
-    
+    processWg.Add(CntTotal)
+
     i := 0
     var out []string
     for _, tmp := range needSyncImages {
         i++
         //logrus.Infof("cnt: %d\n", i)
-        if i > 20 {
+        if i > CntTotal {
             break
         }
         out = append(out , tmp)
     }
     
     for _, imageName := range out {
-        //i++
-        if i == 50 {
-                logrus.Infof("end of images")
-                goto endloog
-        }
         tmpImageName := imageName
         go func() {
             defer func() {
@@ -98,7 +92,6 @@ func (g *Gcr) Sync() {
         }()
     }
 
-endloog:
     logrus.Infof("done process, will generate doc")
     // doc gen
     chgWg := new(sync.WaitGroup)
