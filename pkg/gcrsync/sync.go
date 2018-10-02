@@ -70,7 +70,7 @@ func (g *Gcr) Sync() {
     i := 0
     var out []string
     for _, tmp := range needSyncImages {
-        i++
+        //i++
         //logrus.Infof("cnt: %d\n", i)
         if i > 100 {
             break
