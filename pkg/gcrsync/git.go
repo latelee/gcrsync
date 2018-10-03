@@ -72,7 +72,7 @@ func (g *Gcr) Commit(images []string) {
     // 转换成东八区时间
 	loc, _ := time.LoadLocation("Asia/Shanghai")
     updateTime := time.Now().In(loc).Format("2006-01-02 15:04:05")
-	updateInfo := fmt.Sprintf("### %s Update(num: %d):\n\n", len(images), updateTime)
+	updateInfo := fmt.Sprintf("### %s Update(num: %d):\n\n", updateTime, len(images))
 	for _, imageName := range images {
         // 分离镜像名称和标签
         // TODO：将同一个镜像的所有标签放到一起，不用一一分开，但目前未想到
