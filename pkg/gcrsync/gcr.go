@@ -58,6 +58,7 @@ type Gcr struct {
 	Debug          bool
 	QueryLimit     chan int
 	ProcessLimit   chan int
+    ProcessCount   int
 	HttpTimeOut    time.Duration
 	httpClient     *http.Client
 	dockerClient   *client.Client
@@ -162,7 +163,7 @@ func (g *Gcr) gcrImageList() []string {
 func (g *Gcr) gcrPublicImageNames() []string {
 
     // GET请求，https://gcr.io/v2/google-containers/tags/list
-    // 与curl https://gcr.io/v2/google-containers/tags/list应该是一样的
+    // 与curl https://gcr.io/v2/google-containers/tags/list的结果应该是一样的
 	req, err := http.NewRequest("GET", fmt.Sprintf(GcrImages, g.NameSpace), nil)
 	utils.CheckAndExit(err)
 
@@ -178,7 +179,7 @@ func (g *Gcr) gcrPublicImageNames() []string {
     
     logrus.Infof("gcrPublicImageNames() Number of gcr images: %d", len(imageNames))
 
-    // 去掉arm、ppc、s390x版本的镜像，——加上这些，镜像会非常多
+    // 去掉arm、ppc、s390x版本的镜像，——因为加上这些，镜像会非常多
     var outtmp []string
     for _, tmp := range imageNames {
         tmpImageName := tmp
@@ -191,17 +192,4 @@ func (g *Gcr) gcrPublicImageNames() []string {
     }
     
     return outtmp
-    
-    // 临时不要
-    i := 0
-    var out []string
-    for _, tmp := range outtmp {
-        i++
-        //取前面3个100
-        if i > 200 {
-            break
-        }
-        out = append(out , tmp)
-    }
-	return out
 }

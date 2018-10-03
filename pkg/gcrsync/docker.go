@@ -93,10 +93,10 @@ func (g *Gcr) Process(imageName string) {
 
 	}
 	logrus.Infoln("Append README.md")
+    
     CntIter++
-    if (CntIter < CntTotal) {
-        logrus.Infof("processing [%d/%d]", CntIter, CntTotal)
-    }
+    logrus.Infof("processing [%d/%d]", CntIter, CntTotal)
+    
 	g.update <- imageName
 	logrus.Debugln("Done.")
 

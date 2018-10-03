@@ -35,7 +35,7 @@ import (
 var debug, test bool
 var proxy, dockerUser, dockerPassword, nameSpace string
 var githubRepo, githubUser, githubEmail, githubToken string
-var queryLimit, processLimit, monitorCount int
+var queryLimit, processLimit, processCount, monitorCount int
 var httpTimeout time.Duration
 
 var rootCmd = &cobra.Command{
@@ -52,6 +52,7 @@ A docker image sync tool for Google container registry (gcr.io).`,
 			NameSpace:      nameSpace,
 			QueryLimit:     make(chan int, queryLimit),
 			ProcessLimit:   make(chan int, processLimit),
+            ProcessCount:   processCount,
 			HttpTimeOut:    httpTimeout,
 			GithubRepo:     githubRepo,
             GithubUser:     githubUser,
@@ -81,7 +82,8 @@ func init() {
 	rootCmd.PersistentFlags().StringVar(&nameSpace, "namespace", "google-containers", "google container registry namespace")
 	rootCmd.PersistentFlags().IntVar(&queryLimit, "querylimit", 50, "http query limit")
 	rootCmd.PersistentFlags().DurationVar(&httpTimeout, "httptimeout", 10*time.Second, "http request timeout")
-	rootCmd.PersistentFlags().IntVar(&processLimit, "processlimit", 10, "image process limit")
+	rootCmd.PersistentFlags().IntVar(&processLimit, "processlimit", 20, "image process limit")
+    rootCmd.PersistentFlags().IntVar(&processCount, "processCount", 100, "image process total count(-1 means all in grc.io)")
 	rootCmd.PersistentFlags().StringVar(&githubRepo, "githubrepo", "latelee/gcr.io", "github commit repo")
     rootCmd.PersistentFlags().StringVar(&githubUser, "githubuser", "Late Lee", "github commit user name")
     rootCmd.PersistentFlags().StringVar(&githubEmail, "githubemail", "li@latelee.org", "github commit email")

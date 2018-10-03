@@ -62,9 +62,14 @@ func (g *Gcr) Sync() {
     logrus.Infof("Sync() Google container registry images total: %d", len(gcrImages))
     logrus.Infof("Sync() Number of images waiting to be processed: %d", len(needSyncImages))
 
-    CntTotal = 100 //len(needSyncImages)
+    // 考虑到travis-ci一次性处理不了那么多（所有gcr.io镜像可达几千个），次数可以由命令行传递进来
+    // 如果为-1，则处理所有的（但可能会失败）
+    if g.ProcessCount == -1 {
+        CntTotal = len(needSyncImages)
+    } else {
+        CntTotal = g.ProcessCount
+    }
     processWg := new(sync.WaitGroup)
-    //processWg.Add(len(needSyncImages))
     processWg.Add(CntTotal)
 
     i := 0
