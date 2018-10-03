@@ -67,7 +67,11 @@ func (g *Gcr) Sync() {
     if g.ProcessCount == -1 {
         CntTotal = len(needSyncImages)
     } else {
-        CntTotal = g.ProcessCount
+        if len(needSyncImages) < g.ProcessCount {
+            CntTotal = len(needSyncImages)
+        } else {
+            CntTotal = g.ProcessCount
+        }
     }
     processWg := new(sync.WaitGroup)
     processWg.Add(CntTotal)
