@@ -36,6 +36,9 @@ import (
 	"github.com/latelee/gcrsync/pkg/utils"
 )
 
+/*
+组装文件：README.md和ImageList，使用markdown格式。
+*/
 func (g *Gcr) Commit(images []string) {
 	repoDir := strings.Split(g.GithubRepo, "/")[1]
 	readmeFile := filepath.Join(repoDir, g.NameSpace)
@@ -56,7 +59,7 @@ func (g *Gcr) Commit(images []string) {
 	var content []byte
 	chgLog, err := os.Open(readmeFile)
     defer chgLog.Close()
-    // 如果能打开，则读取已有内容
+    // 如果能打开，则读取已有内容(否则以前的记录会没有)
     if err == nil {
 		content, err = ioutil.ReadAll(chgLog)
 		utils.CheckAndExit(err)
@@ -66,13 +69,16 @@ func (g *Gcr) Commit(images []string) {
 	utils.CheckAndExit(err)
 	defer chgLog.Close()
 
+    // 转换成东八区时间
 	loc, _ := time.LoadLocation("Asia/Shanghai")
     updateTime := time.Now().In(loc).Format("2006-01-02 15:04:05")
-	updateInfo := fmt.Sprintf("### %s Update:\n\n", updateTime)
+	updateInfo := fmt.Sprintf("### %s Update(num: %d):\n\n", len(images), updateTime)
 	for _, imageName := range images {
         // 分离镜像名称和标签
+        // TODO：将同一个镜像的所有标签放到一起，不用一一分开，但目前未想到
         tmpImage := strings.Split(imageName, ":")[0]
         //tmpTag := strings.Split(imageName, ":")[1]
+        // 添加超链接到hub.docker上，方便查看
 		updateInfo += "- " + fmt.Sprintf("[gcr.io/%s/%s](https://hub.docker.com/r/%s/%s/tags)", g.NameSpace, imageName, g.DockerUser, tmpImage) + "\n"
         //updateInfo += "- " + fmt.Sprintf("<a href=\"https://hub.docker.com/r/%s/%s/tags\" target=\"_blank\">gcr.io/%s/%s</a>", g.DockerUser, tmpImage, g.NameSpace, imageName) + "\n"
         //updateInfo += fmt.Sprintf("Tags: [%s]\n", tmpTag)
