@@ -178,6 +178,7 @@ func (g *Gcr) gcrPublicImageNames() []string {
     
     logrus.Infof("gcrPublicImageNames() Number of gcr images: %d", len(imageNames))
 
+    // 去掉arm、ppc、s390x版本的镜像，——加上这些，镜像会非常多
     var outtmp []string
     for _, tmp := range imageNames {
         tmpImageName := tmp

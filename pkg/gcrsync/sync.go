@@ -62,10 +62,10 @@ func (g *Gcr) Sync() {
     logrus.Infof("Sync() Google container registry images total: %d", len(gcrImages))
     logrus.Infof("Sync() Number of images waiting to be processed: %d", len(needSyncImages))
 
-    CntTotal = 100 //len(needSyncImages)
+    //CntTotal = 100 //len(needSyncImages)
     processWg := new(sync.WaitGroup)
-    //processWg.Add(len(needSyncImages))
-    processWg.Add(CntTotal)
+    processWg.Add(len(needSyncImages))
+    //processWg.Add(CntTotal)
 
     i := 0
     var out []string

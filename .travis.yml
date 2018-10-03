@@ -18,4 +18,4 @@ go:
   ## travis_wait 30 
 script:
   - go get github.com/latelee/gcrsync
-  - gcrsync sync --namespace google-containers --querylimit 20 --processlimit 20 --httptimeout 10s --user gcrcontainer --password ${DOCKER_PASSWORD} --githubrepo latelee/gcr.io --githubtoken ${GITHUB_TOKEN}
+  - gcrsync sync --namespace google-containers --querylimit 20 --processlimit 60 --httptimeout 10s --user gcrcontainer --password ${DOCKER_PASSWORD} --githubrepo latelee/gcr.io --githubtoken ${GITHUB_TOKEN}
