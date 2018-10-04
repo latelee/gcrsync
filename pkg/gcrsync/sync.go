@@ -37,7 +37,7 @@ import (
     "github.com/Sirupsen/logrus"
     "github.com/docker/docker/client"
 
-    "github.com/latelee/gcrsync/pkg/utils"
+    "gcrsync/pkg/utils"
 )
 
 const (

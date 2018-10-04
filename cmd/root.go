@@ -27,7 +27,7 @@ import (
 	"os"
 	"time"
 
-	"github.com/latelee/gcrsync/pkg/gcrsync"
+	"gcrsync/pkg/gcrsync"
 
 	"github.com/spf13/cobra"
 )

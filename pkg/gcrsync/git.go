@@ -33,7 +33,7 @@ import (
 
 	"github.com/json-iterator/go"
 	"github.com/Sirupsen/logrus"
-	"github.com/latelee/gcrsync/pkg/utils"
+	"gcrsync/pkg/utils"
 )
 
 /*

@@ -22,7 +22,7 @@
 
 package main
 
-import "github.com/latelee/gcrsync/cmd"
+import "gcrsync/cmd"
 
 func main() {
 	cmd.Execute()
