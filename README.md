@@ -1,6 +1,11 @@
-# gcrsync [![Build Status](https://travis-ci.org/mritd/gcrsync.svg?branch=master)](https://travis-ci.org/mritd/gcrsync)
+# gcrsync  
+[![Build Status](https://www.travis-ci.org/latelee/gcrsync.svg?branch=master)](https://www.travis-ci.org/latelee/gcrsync)
 
 A docker image sync tool for Google container registry (gcr.io)
+
+# gcrsync
+gcr.io(Google container registry)docker镜像同步工具
+
 
 ## 安装
 
