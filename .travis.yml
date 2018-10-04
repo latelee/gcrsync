@@ -21,5 +21,5 @@ script:
   #- go build
   - go get github.com/latelee/gcrsync
   - gcrsync sync --namespace google-containers --querylimit 20 --processlimit 50 --httptimeout 10s --processcount 200 --dockeruser gcrcontainer --dockerpassword ${DOCKER_PASSWORD} --githubrepo latelee/gcr.io --githubtoken ${GITHUB_TOKEN}
-  - gcrsync sync --namespace kubeflow-images-public --querylimit 20 --processlimit 50 --httptimeout 10s --processcount 200 --dockeruser gcrcontainer --dockerpassword ${DOCKER_PASSWORD} --githubrepo latelee/gcr.io --githubtoken ${GITHUB_TOKEN}
+  - gcrsync sync --namespace kubeflow-images-public --querylimit 20 --processlimit 50 --httptimeout 10s --processcount 10 --dockeruser gcrcontainer --dockerpassword ${DOCKER_PASSWORD} --githubrepo latelee/gcr.io --githubtoken ${GITHUB_TOKEN}
   
