@@ -34,7 +34,7 @@ import (
 
 	"github.com/Sirupsen/logrus"
 	"github.com/json-iterator/go"
-	"gcrsync/pkg/utils"
+	"github.com/latelee/gcrsync/pkg/utils"
 )
 
 type Image struct {

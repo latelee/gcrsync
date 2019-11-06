@@ -23,7 +23,7 @@
 package cmd
 
 import (
-	"gcrsync/pkg/gcrsync"
+	"github.com/latelee/gcrsync/pkg/gcrsync"
 	"github.com/spf13/cobra"
 )
 
